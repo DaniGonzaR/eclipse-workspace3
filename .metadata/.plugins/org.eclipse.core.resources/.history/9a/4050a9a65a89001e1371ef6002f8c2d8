@@ -1,0 +1,57 @@
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+
+import java.util.ArrayList;
+
+public class ejemploDB4O {
+
+    public static void main(String[] args) {
+        // Creamos la conexión
+        ObjectContainer db = Db4oEmbedded.openFile("personas.db4o");
+
+        // Creamos los objetos
+        Persona p1 = new Persona("Fernando", 30, 1.73, 73);
+        Persona p2 = new Persona("Pepe", 30, 1.75, 80);
+        Persona p3 = new Persona("Alfredo", 20, 1.9, 90);
+        Persona p4 = new Persona("Roberto", 35, 1.70, 70);
+        Persona p5 = new Persona("Domingo", 30, 1.73, 80);
+
+        // Guardamos los objetos en la base de datos
+        db.store(p1);
+        db.store(p2);
+        db.store(p3);
+        db.store(p4);
+        db.store(p5);
+
+        // Creamos el padre con hijos
+        ArrayList<Persona> hijosPadre = new ArrayList<>();
+        hijosPadre.add(p1);
+        hijosPadre.add(p2);
+        Padre padre = new Padre("Padre 1", 40, 80, 1.80, hijosPadre);
+        Padre padre2 = new Padre("Padre 2", 40, 80, 1.80, hijosPadre);
+
+        // Guardamos el padre en la base de datos
+        db.store(padre);
+        db.store(padre2);
+
+        // Mostramos todas las personas
+        Persona personaEjemplo = new Persona();
+        ObjectSet<Persona> result = db.queryByExample(personaEjemplo);
+        System.out.println("Todas las personas:");
+        while (result.hasNext()) {
+            System.out.println(result.next());
+        }
+
+        // Mostramos el padre con sus hijos
+        Padre padreEjemplo = new Padre(null, 0, 0, 0, null);
+        ObjectSet<Padre> resultPadre = db.queryByExample(padreEjemplo);
+        System.out.println("Padres con hijos:");
+        while (resultPadre.hasNext()) {
+            System.out.println(resultPadre.next());
+        }
+
+        // Cerramos la base de datos
+        db.close();
+    }
+}
