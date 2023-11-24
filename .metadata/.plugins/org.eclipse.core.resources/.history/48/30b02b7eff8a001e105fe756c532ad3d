@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ejemploDB4O {
 
     public static void main(String[] args) {
-        // Creamos la conexión y comprobamos en git
+        // Creamos la conexión
         ObjectContainer db = Db4oEmbedded.openFile("personas.db4o");
 
         // Creamos los objetos
